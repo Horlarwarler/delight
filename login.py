@@ -1,9 +1,11 @@
 
+from doctest import master
+from glob import glob
 from pyclbr import Class
 from tkinter import *
 from tkinter import messagebox
 from turtle import width
-import Homepage
+from unicodedata import category
 
 import mysql.connector
 from mysql.connector import Error
@@ -15,9 +17,8 @@ from pyparsing import White
 
 class Appliccation():
 
-
-    global currentScreeen
-    currentScreen = "Dashboard"
+    currentScreen = "dashboard"
+    previousScreen = "dashboard"
     def __init__(self,master,*args,**kwargs):
         self.master=master
 
@@ -47,7 +48,11 @@ class Appliccation():
     
 
     def Home(self= None):
+        global currentScreen
+        global previousScreen
         global Homepage
+        currentScreen = "dashboard"
+        previousScreen ="dashboard"
         Homepage = Tk()
         Homepage.title("Delight Supermarket")
         Homepage.geometry("1366x768+0+0")
@@ -84,7 +89,7 @@ class Appliccation():
         self.MenuFrame.configure(relief="groove")
         self.MenuFrame.configure(background="#585858")
 
-        self.Dashboard = Button(self.MenuFrame )
+        self.Dashboard = Button(self.MenuFrame , command=self.dashboardClicked)
         self.Dashboard.place(x=-60, y=50, height=54, width=347)
         self.Dashboard.configure(activebackground="#000000")
         self.Dashboard.configure(activeforeground="white")
@@ -100,7 +105,7 @@ class Appliccation():
         self.Dashboard.configure(pady="0")
         self.Dashboard.configure(text='''Dashboard''')
 
-        self.Category = Button(self.MenuFrame)
+        self.Category = Button(self.MenuFrame, command= self.categoryClicked)
         self.Category.place(x=-72, y=120, height=54, width=357)
         self.Category.configure(activebackground="#000000")
         self.Category.configure(activeforeground="white")
@@ -116,7 +121,7 @@ class Appliccation():
         self.Category.configure(pady="0")
         self.Category.configure(text='''Category''')
 
-        self.Orders = Button(self.MenuFrame)
+        self.Orders = Button(self.MenuFrame , command= self.orderClicked)
         self.Orders.place(x=-80, y=200, height=54, width=367)
         self.Orders.configure(activebackground="#000000")
         self.Orders.configure(activeforeground="white")
@@ -132,7 +137,7 @@ class Appliccation():
         self.Orders.configure(pady="0")
         self.Orders.configure(text='''Orders''')
 
-        self.Report = Button(self.MenuFrame)
+        self.Report = Button(self.MenuFrame, command=self.report)
         self.Report.place(x=-80, y=280, height=54, width=367)
         self.Report.configure(activebackground="#000000")
         self.Report.configure(activeforeground="white")
@@ -165,16 +170,21 @@ class Appliccation():
         self.Logout.configure(text='''Log Out''')
        
 
-        self.Container = Frame(self.top)
-        self.Container.place(x=280, y=60, height=703, width=1085)
-        self.Container.configure(relief="groove")
-        self.Container.configure(background="#c0c0c0")
-               
-        def dashboard():
-            global currentScreeen
-            currentScreeen = "Dashboard"
-            self.Label1 = Label(self.Container)
-            self.Label1.place(relx=0.009, rely=0.0, height=51, width=144)
+        
+       # self.dashboard()
+
+    def dashboard(self):
+            
+            self.dashboardContainer = Frame(Homepage)
+            
+            self.dashboardContainer.place(x=280, y=60, height=703, width=1085)
+            self.dashboardContainer.configure(relief="groove")
+            self.dashboardContainer.configure(background="#c0c0c0")
+            global currentScreen
+            global previousScreen 
+            
+            self.Label1 = Label(self.dashboardContainer)
+            self.Label1.place(x=10, y=0, height=51, width=144)
             self.Label1.configure(anchor='w')
             self.Label1.configure(background="#c0c0c0")
             self.Label1.configure(borderwidth="0")
@@ -184,13 +194,13 @@ class Appliccation():
             self.Label1.configure(foreground="#3f3f3f")
             self.Label1.configure(text='''Dashboard''')
     
-            self.Items = Frame(self.Container)
-            self.Items.place(relx=0.009, rely=0.071, relheight=0.178, relwidth=0.226)
+            self.Items = Frame(self.dashboardContainer)
+            self.Items.place(x=10, y=50, height=125, width=245)
     
             self.Items.configure(relief="groove")
             self.Items.configure(background="#8000ff")   
             self.TotalItemLabel = Label(self.Items)
-            self.TotalItemLabel.place(relx=0.041, rely=0.48, height=41, width=124)
+            self.TotalItemLabel.place(x=10, y=60, height=41, width=124)
             self.TotalItemLabel.configure(anchor='w')
             self.TotalItemLabel.configure(background="#8000ff")
             self.TotalItemLabel.configure(borderwidth="0")
@@ -200,7 +210,7 @@ class Appliccation():
             self.TotalItemLabel.configure(foreground="#ffffff")
             self.TotalItemLabel.configure(text='''Total Items''')    
             self.totalItemCount = Label(self.Items)
-            self.totalItemCount.place(relx=0.041, rely=0.16, height=41, width=124)
+            self.totalItemCount.place(x=10, y=20, height=41, width=124)
             self.totalItemCount.configure(activebackground="#f9f9f9")
             self.totalItemCount.configure(activeforeground="black")
             self.totalItemCount.configure(anchor='w')
@@ -214,17 +224,15 @@ class Appliccation():
             self.totalItemCount.configure(highlightcolor="black")
             self.totalItemCount.configure(text='''20''')
     
-            self.Categorycount = Frame(self.Container)
-            self.Categorycount.place(relx=0.276, rely=0.071, relheight=0.178
-                    , relwidth=0.226)
+            self.Categorycount = Frame(self.dashboardContainer)
+            self.Categorycount.place(x=300, y=50, height=125, width=245)
             self.Categorycount.configure(relief="groove")
             self.Categorycount.configure(background="#008040")
             self.Categorycount.configure(highlightbackground="#d9d9d9")
             self.Categorycount.configure(highlightcolor="black")
     
             self.CategoryCountLabel = Label(self.Categorycount)
-            self.CategoryCountLabel.place(relx=0.041, rely=0.48, height=41
-                    , width=124)
+            self.CategoryCountLabel.place(x=10, y=60, height=41, width=124)
             self.CategoryCountLabel.configure(activebackground="#f9f9f9")
             self.CategoryCountLabel.configure(activeforeground="black")
             self.CategoryCountLabel.configure(anchor='w')
@@ -240,7 +248,7 @@ class Appliccation():
             self.CategoryCountLabel.configure(text='''Category''')
 
             self.categoryCount = Label(self.Categorycount)
-            self.categoryCount.place(relx=0.041, rely=0.16, height=41, width=124)
+            self.categoryCount.place(x=10, y=20, height=41, width=124)
             self.categoryCount.configure(activebackground="#f9f9f9")
             self.categoryCount.configure(activeforeground="black")
             self.categoryCount.configure(anchor='w')
@@ -254,16 +262,16 @@ class Appliccation():
             self.categoryCount.configure(highlightcolor="black")
             self.categoryCount.configure(text='''14''')
     
-            self.Categorycount_1 =Frame(self.Container)
-            self.Categorycount_1.place(relx=0.553, rely=0.071, relheight=0.178
-                    , relwidth=0.226)
+            self.Categorycount_1 =Frame(self.dashboardContainer)
+            
+            self.Categorycount_1.place(x=600, y=50, height=125, width=245)
             self.Categorycount_1.configure(relief="groove")
             self.Categorycount_1.configure(background="#008040")
             self.Categorycount_1.configure(highlightbackground="#d9d9d9")
             self.Categorycount_1.configure(highlightcolor="black")
     
             self.paidCountLabel = Label(self.Categorycount_1)
-            self.paidCountLabel.place(relx=0.041, rely=0.48, height=41, width=124)
+            self.paidCountLabel.place(x=10, y=60, height=41, width=124)
             self.paidCountLabel.configure(activebackground="#f9f9f9")
             self.paidCountLabel.configure(activeforeground="black")
             self.paidCountLabel.configure(anchor='w')
@@ -278,7 +286,7 @@ class Appliccation():
             self.paidCountLabel.configure(text='''Paid Orders''')
     
             self.paidCount = Label(self.Categorycount_1)
-            self.paidCount.place(relx=0.041, rely=0.16, height=41, width=124)
+            self.paidCount.place(x=10, y=20, height=41, width=124)
             self.paidCount.configure(activebackground="#f9f9f9")
             self.paidCount.configure(activeforeground="black")
             self.paidCount.configure(anchor='w')
@@ -291,12 +299,104 @@ class Appliccation():
             self.paidCount.configure(highlightbackground="#d9d9d9")
             self.paidCount.configure(highlightcolor="black")
             self.paidCount.configure(text='''30''')
-
-        dashboard()
+    def category(self):
+        self.categoryContainer = Frame(Homepage)
             
+        self.categoryContainer.place(x=280, y=60, height=703, width=1085)
+        self.categoryContainer.configure(relief="groove")
+        self.categoryContainer.configure(background="#c0c0c0")
+        global currentScreen
+        global previousScreen 
         
+        self.Label1 = Label(self.categoryContainer)
+        self.Label1.place(x=10, y=0, height=51, width=144)
+        self.Label1.configure(anchor='w')
+        self.Label1.configure(background="#c0c0c0")
+        self.Label1.configure(borderwidth="0")
+        self.Label1.configure(compound='left')
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
+        self.Label1.configure(foreground="#3f3f3f")
+        self.Label1.configure(text='''Category''')
+        self.login = Button(self.loginframe,text="Login",width=12,height=2,bg="#F0FEF6",command=self.login)
+
+        self.addButton = Button(self.categoryContainer,background="#458afc", width = 15 ,height=2,text="Add categroy",font="-family {Segoe UI} -size 10 -weight bold" )
+        self.addButton.place(x = 0 , y = 50)
+        self.searchLabel=Label(self.categoryContainer,text="Login User",font=('arial 11 bold'),fg='black',bg="#f7f7f7")
+        self.loginLabel.place(x=820, y = 20)
+
+        self.searchBox = Entry(self.categoryContainer,width=35, font=('arial 18 bold'),bg="#f7f7f7")
+        self.userbox.place(x=880,y=20)
+        
+    
 
 
+                               
+    #Fun to handle navigation clicked  clicked
+    def dashboardClicked(self):
+        global currentScreen
+        global previousScreen
+        currentScreen = "dashboard"
+        self.switchPage()
+        
+    def categoryClicked(self):
+        global currentScreen
+        currentScreen = "category"
+        self.switchPage()
+
+    def orderClicked(self):
+        global currentScreen
+        currentScreen = "orders"
+        self.switchPage()
+    def report(self):
+        global currentScreen
+        global previousScreen
+        currentScreen = "report"
+        
+        self.switchPage()
+
+    def switchPage(self):
+        global currentScreen
+        global previousScreen
+
+        if(currentScreen =="dashboard"):
+            self.dashboard()
+
+        elif(currentScreen == "category"):
+            self.category()
+            ##Category
+            print("Heerr")
+        elif(currentScreen == "orders"):
+            ##order page
+            self.removePreviousScreen()
+            print("Heerr")
+        else:
+            self.removePreviousScreen()
+            ##REPORT PAGE
+            print("Heerr")
+       
+        if(previousScreen != currentScreen):
+           
+            self.removePreviousScreen()
+        previousScreen = currentScreen
+        
+        
+        
+    def removePreviousScreen(self):
+        global previousScreen
+        print(f"pre {previousScreen}")
+        if(previousScreen =="dashboard"):
+            print("I am clicked")
+            self.dashboardContainer.destroy()
+        elif(previousScreen == "category"):
+            ##Category
+            print
+        elif(previousScreen == "orders"):
+            ##order page
+            print
+        elif (previousScreen == "report"):
+            ##REPORT PAGE
+            print
 
 
     def login(self,*args,**kwargs):
@@ -310,7 +410,7 @@ class Appliccation():
             self.lbl_result.config(text="Please complete the required field!", fg="red")
         elif(self.password == "root" and self.username == "admin"):
             self.Home()
-
+            self.dashboard()
             self.master.withdraw()
             
         else:
