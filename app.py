@@ -1,5 +1,3 @@
-from email import message
-from re import X
 import tkinter as tk
 from tkinter import messagebox
 
