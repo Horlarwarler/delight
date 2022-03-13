@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import *
+from tkinter import ttk
 
 
 class Application():
@@ -125,7 +127,7 @@ class Application():
         # Addin
         self.toolList = {
             "Dashboard": (lambda:self.switchTool("Dashboard", self.dashboard)),
-            'Category': (lambda:self.switchTool('Category', self.category)),
+            'Products': (lambda:self.switchTool('Products', self.product)),
             'Orders': (lambda:self.switchTool('Orders', self.order)),
             'Report': (lambda:self.switchTool('Report', self.report))
         }
@@ -293,12 +295,99 @@ class Application():
             text='''30'''
         )
 
-    def order(self):
-        pass
+    def product(self):
 
-    def category(self):
-        addButton = tk.Button(self.Container,background="#458afc", width = 15 ,height=2,text="Add categroy",font="-family {Segoe UI} -size 10 -weight bold" )
-        addButton.place(x = 0 , y = 50)
+        productContainer = tk.Frame(self.Container)
+        productContainer.place(x=0, y=0, height=703, width=1085)
+        productContainer.configure(relief="groove")
+        productContainer.configure(background="#c0c0c0")       
+        
+        addButton = Button(productContainer,background="#458afc", width = 15 ,height=2,text="Add Product",font="-family {Segoe UI} -size 10 -weight bold", command=self.addProducts )
+        addButton.place(x = 10 , y = 10)
+
+        productList = Frame(productContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        productList.place(x = 10, y = 60, )
+        searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
+        searchLabel.place(x=730, y = 50)
+        searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
+        searchBox.place(x=800,y=50)
+
+        productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        productName.place(x=20, y=100)
+
+        actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        actionName.place(x=700, y=100)
+        TSeparator1 = ttk.Separator(productList, orient='horizontal')
+        TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
+    def addProducts(self):
+        newProduct = tk.Frame(self.Container)
+        newProduct.place(x=0, y=0, height=450, width=1085)
+        newProduct.configure(relief="groove")
+        newProduct.configure(background="#c0c0c0") 
+        Label1 = Label(newProduct)
+        Label1.place(x=10, y=0,)
+       # Label1.place()
+        Label1.configure(anchor='w')
+        Label1.configure(background="#c0c0c0")
+        Label1.configure(borderwidth="0")
+        Label1.configure(compound='left')
+        Label1.configure(disabledforeground="#a3a3a3")
+        Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
+        Label1.configure(foreground="#3f3f3f")
+        Label1.configure(text='''Add new Products''')
+        additemContainer = Frame(newProduct,height= 600, width = 1050, bg= "#f7f7f7")
+        additemContainer.place(x = 10, y = 50, )
+        name_l=Label(additemContainer,text="Enter Product Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        name_l.place(x=10,y=20)
+        #userbox = Entry(loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6")
+        name_e=Entry(additemContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=4)
+        name_e.place(x=10,y=60)
+
+        stock_l=Label(additemContainer,text="Enter Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
+        stock_l.place(x=10,y=100)
+        stock_e = Entry(additemContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=4)
+        stock_e.place(x=10, y=140)
+
+        cp_l = Label(additemContainer,  text="Enter Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        cp_l.place(x=10, y=180)
+        cp_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
+        cp_e.place(x=10, y=220)
+
+        sp_l = Label(additemContainer,  text="Enter selling Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        sp_l.place(x=10, y=260)
+        sp_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
+        sp_e.place(x=10, y=300)
+        clearButton = Button(additemContainer,background="RED", width = 15 ,height=2,text="Add products",font="-family {Segoe UI} -size 10 -weight bold" , )
+        clearButton.place(x = 750 , y =350 )
+        saveButton = Button(additemContainer,background="GREEN", width = 15 ,height=2,text="Save",font="-family {Segoe UI} -size 10 -weight bold" , )
+        saveButton.place(x = 900 , y = 350)
+
+    def order(self):
+        orderContainer = tk.Frame(self.Container)
+        orderContainer.place(x=0, y=0, height=703, width=1085)
+        orderContainer.configure(relief="groove")
+        orderContainer.configure(background="#c0c0c0")       
+        
+        addButton = Button(orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addProducts )
+        addButton.place(x = 10 , y = 10)
+
+        productList = Frame(orderContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        productList.place(x = 10, y = 60, )
+        searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
+        searchLabel.place(x=730, y = 50)
+        searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
+        searchBox.place(x=800,y=50)
+
+        productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        productName.place(x=20, y=100)
+
+        actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        actionName.place(x=700, y=100)
+        TSeparator1 = ttk.Separator(productList, orient='horizontal')
+        TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
+    def addorders():
+        pass
+    
         
     def report(self):
         pass

@@ -1,8 +1,10 @@
 
 from doctest import master
 from glob import glob
+from pickle import FRAME
 from pyclbr import Class
 from tkinter import *
+from tkinter import ttk
 from tkinter import messagebox
 from turtle import width
 from unicodedata import category
@@ -299,9 +301,95 @@ class Appliccation():
             self.paidCount.configure(highlightbackground="#d9d9d9")
             self.paidCount.configure(highlightcolor="black")
             self.paidCount.configure(text='''30''')
+    def order(self):
+        global currentScreen
+        global previousScreen 
+        self.itemsPage = Frame(Homepage)
+        self.itemsPage.place(x=280, y=60, height=703, width=1085)
+        #itemsPage = Frame(Homepage)
+
+        self.itemsContainer = Frame(self.itemsPage) 
+
+        self.itemsContainer.place(x=0, y=0, height=703, width=1085)
+        #self.itemsContainer.configure()
+        self.itemsContainer.configure(background="#c0c0c0")
+        self.Label1 = Label(self.itemsContainer)
+        self.Label1.place(x=10, y=0, height=51, width=144)
+        self.Label1.configure(anchor='w')
+        self.Label1.configure(background="#c0c0c0")
+        self.Label1.configure(borderwidth="0")
+        self.Label1.configure(compound='left')
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
+        self.Label1.configure(foreground="#3f3f3f")
+        self.Label1.configure(text='''Products''')
+        self.addButton = Button(self.itemsContainer,background="#458afc", width = 15 ,height=2,text="Add products",font="-family {Segoe UI} -size 10 -weight bold" , command=self.addProducts )
+        self.addButton.place(x = 10 , y = 50)
+
+        self.itemList = Frame(self.itemsContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        self.itemList.place(x = 10, y = 100, )
+        self.searchLabel=Label(self.itemList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
+        self.searchLabel.place(x=730, y = 50)
+        self.catergorySearch = Entry(self.itemList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
+        self.catergorySearch.place(x=800,y=50)
+
+        self.itemName=Label(self.itemList,text="Products Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        self.itemName.place(x=20, y=100)
+
+        self.itemAction=Label(self.itemList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        self.itemAction.place(x=700, y=100)
+        self.TSeparator1 = ttk.Separator(self.itemList, orient='horizontal')
+        self.TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
+    
+    def addProducts(self):
+        self.itemsContainer.destroy()
+        self.addproducts = Frame(self.itemsPage) 
+        self.addproducts.place(x=0, y=0, height=703, width=1085)
+        self.addproducts.configure(relief="groove")
+        self.addproducts.configure(background="#c0c0c0")
+        self.Label1 = Label(self.addproducts)
+        self.Label1.place(x=10, y=0,)
+       # self.Label1.place()
+        self.Label1.configure(anchor='w')
+        self.Label1.configure(background="#c0c0c0")
+        self.Label1.configure(borderwidth="0")
+        self.Label1.configure(compound='left')
+        self.Label1.configure(disabledforeground="#a3a3a3")
+        self.Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
+        self.Label1.configure(foreground="#3f3f3f")
+        self.Label1.configure(text='''Add new Products''')
+        self.additemContainer = Frame(self.addproducts,height= 700, width = 1050, bg= "#f7f7f7")
+        self.additemContainer.place(x = 10, y = 50, )
+        self.name_l=Label(self.additemContainer,text="Enter Product Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        self.name_l.place(x=10,y=20)
+        #self.userbox = Entry(self.loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6")
+        self.name_e=Entry(self.additemContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=4)
+        self.name_e.place(x=10,y=60)
+
+        self.stock_l=Label(self.additemContainer,text="Enter Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
+        self.stock_l.place(x=10,y=100)
+        self.stock_e = Entry(self.additemContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=4)
+        self.stock_e.place(x=10, y=140)
+
+        self.cp_l = Label(self.additemContainer,  text="Enter Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        self.cp_l.place(x=10, y=180)
+        self.cp_e = Entry(self.additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
+        self.cp_e.place(x=10, y=220)
+
+        self.sp_l = Label(self.additemContainer,  text="Enter selling Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        self.sp_l.place(x=10, y=260)
+        self.sp_e = Entry(self.additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
+        self.sp_e.place(x=10, y=300)
+        
+
+    
+        
+    
+
+
     def category(self):
+        global tree
         self.categoryContainer = Frame(Homepage)
-            
         self.categoryContainer.place(x=280, y=60, height=703, width=1085)
         self.categoryContainer.configure(relief="groove")
         self.categoryContainer.configure(background="#c0c0c0")
@@ -318,15 +406,33 @@ class Appliccation():
         self.Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
         self.Label1.configure(foreground="#3f3f3f")
         self.Label1.configure(text='''Category''')
-        self.login = Button(self.loginframe,text="Login",width=12,height=2,bg="#F0FEF6",command=self.login)
-
         self.addButton = Button(self.categoryContainer,background="#458afc", width = 15 ,height=2,text="Add categroy",font="-family {Segoe UI} -size 10 -weight bold" )
-        self.addButton.place(x = 0 , y = 50)
-        self.searchLabel=Label(self.categoryContainer,text="Login User",font=('arial 11 bold'),fg='black',bg="#f7f7f7")
-        self.loginLabel.place(x=820, y = 20)
+        self.addButton.place(x = 10 , y = 50)
 
-        self.searchBox = Entry(self.categoryContainer,width=35, font=('arial 18 bold'),bg="#f7f7f7")
-        self.userbox.place(x=880,y=20)
+        self.categoryList = Frame(self.categoryContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        self.categoryList.place(x = 10, y = 100, )
+        self.searchLabel=Label(self.categoryList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
+        self.searchLabel.place(x=730, y = 50)
+        self.searchBox = Entry(self.categoryList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
+        self.searchBox.place(x=800,y=50)
+
+        self.categoryName=Label(self.categoryList,text="Category Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        self.categoryName.place(x=20, y=100)
+
+        self.actionName=Label(self.categoryList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        self.actionName.place(x=700, y=100)
+        self.TSeparator1 = ttk.Separator(self.categoryList, orient='horizontal')
+        self.TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
+
+        #tree = ttk.Treeview(self.categoryList, columns=("S\N", "Category Name", ), selectmode="extended", height=100, yscrollcommand=scrollbary.set, xscrollcommand=scrollbarx.set)
+
+
+
+
+        #elf.addButton = Button(self.categoryList,background="#458afc", width = 15 ,height=2,text="Add categroy",font="-family {Segoe UI} -size 10 -weight bold" )
+        #self.addButton.place(x = 700 , y = 50)
+
+        
         
     
 
@@ -368,8 +474,8 @@ class Appliccation():
             print("Heerr")
         elif(currentScreen == "orders"):
             ##order page
-            self.removePreviousScreen()
-            print("Heerr")
+            self.order()
+            print("Order is clic")
         else:
             self.removePreviousScreen()
             ##REPORT PAGE
@@ -389,9 +495,11 @@ class Appliccation():
             print("I am clicked")
             self.dashboardContainer.destroy()
         elif(previousScreen == "category"):
+            self.categoryContainer.destroy()
             ##Category
             print
         elif(previousScreen == "orders"):
+            self.itemsPage.destroy()
             ##order page
             print
         elif (previousScreen == "report"):
