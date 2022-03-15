@@ -2,9 +2,11 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
 from tkinter import ttk
+import datetime
 
 
 class Application():
+    
     def __init__(self):
         self.root = tk.Tk()        
         self.height = 768
@@ -95,6 +97,9 @@ class Application():
             relief="groove",
             background="#0000a0"
         )
+        date=datetime.datetime.now().date()
+        date_l=Label(self.HeadingRight,text="Today's Date: "+str(date),font=('-family {Segoe UI} -size 13 -weight bold'),bg='#0000a0',fg='white')
+        date_l.place(x=850,y=30)
 
         self.MenuFrame = tk.Frame(self.userDBoard)
         self.MenuFrame.place(x=0, y=64, height=703, width=281)
@@ -340,26 +345,62 @@ class Application():
         name_l=Label(additemContainer,text="Enter Product Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
         name_l.place(x=10,y=20)
         #userbox = Entry(loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6")
-        name_e=Entry(additemContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=4)
+        name_e=Entry(additemContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=2)
         name_e.place(x=10,y=60)
 
-        stock_l=Label(additemContainer,text="Enter Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
-        stock_l.place(x=10,y=100)
-        stock_e = Entry(additemContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=4)
-        stock_e.place(x=10, y=140)
+        quantity_l=Label(additemContainer,text="Enter Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
+        quantity_l.place(x=10,y=100)
+        quantity_e = Entry(additemContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=2)
+        quantity_e.place(x=10, y=140)
 
-        cp_l = Label(additemContainer,  text="Enter Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
-        cp_l.place(x=10, y=180)
-        cp_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
-        cp_e.place(x=10, y=220)
+        costPrice_l = Label(additemContainer,  text="Enter Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        costPrice_l.place(x=10, y=180)
+        costPrice_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        costPrice_e.place(x=10, y=220)
 
-        sp_l = Label(additemContainer,  text="Enter selling Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
-        sp_l.place(x=10, y=260)
-        sp_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=4)
-        sp_e.place(x=10, y=300)
-        clearButton = Button(additemContainer,background="RED", width = 15 ,height=2,text="Add products",font="-family {Segoe UI} -size 10 -weight bold" , )
-        clearButton.place(x = 750 , y =350 )
-        saveButton = Button(additemContainer,background="GREEN", width = 15 ,height=2,text="Save",font="-family {Segoe UI} -size 10 -weight bold" , )
+        sellingPrice_l = Label(additemContainer,  text="Enter selling Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        sellingPrice_l.place(x=10, y=260)
+        sellingPrice_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        sellingPrice_e.place(x=10, y=300)
+
+        def cancel():
+            newProduct.destroy()
+        def confirm():
+            #getting value from entries
+            name = name_e.get()
+            quantity = quantity_e.get()
+            costPrice = costPrice_e.get()
+            sellingPrice = sellingPrice_e.get()
+
+            ## validating login
+            if(name != "" and quantity != "" and costPrice != "" and sellingPrice != "" ):
+                try:
+                    quantity = int(quantity)
+                    costPrice = float(costPrice)
+                    sellingPrice = float(costPrice)
+                except:
+                    messagebox.showinfo("Entry Error", "Please Enter Quantity , Cost Price, Selling Price with valid number")
+                else:
+                    ## To check if user never use zero 
+                    if(quantity > 0 and costPrice > 0  and sellingPrice > 0):
+                        if messagebox.askyesno("Confirm Field Entry", message= "Are you sure to add " + name +" to  products list" ):
+                            ##To do 
+                            ## Adding the product to the database
+                            ##Removing the screen after adding into database
+                            newProduct.destroy()
+                    else:
+                        messagebox.showinfo("Error", "Values cannot be zero")
+
+                
+            else:
+                messagebox.showinfo("Error", "Please Fill all the entries.")
+
+
+
+            
+        cancelButton = Button(additemContainer,background="RED", width = 15 ,height=2,text="Cancel",font="-family {Segoe UI} -size 10 -weight bold" , command=cancel )
+        cancelButton.place(x = 750 , y =350 )
+        saveButton = Button(additemContainer,background="GREEN", width = 15 ,height=2,text="Add product",font="-family {Segoe UI} -size 10 -weight bold" , command=confirm )
         saveButton.place(x = 900 , y = 350)
 
     def order(self):
@@ -368,7 +409,7 @@ class Application():
         orderContainer.configure(relief="groove")
         orderContainer.configure(background="#c0c0c0")       
         
-        addButton = Button(orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addProducts )
+        addButton = Button(orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
         addButton.place(x = 10 , y = 10)
 
         productList = Frame(orderContainer,height= 500, width = 1050, bg= "#f7f7f7")
@@ -385,7 +426,108 @@ class Application():
         actionName.place(x=700, y=100)
         TSeparator1 = ttk.Separator(productList, orient='horizontal')
         TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
-    def addorders():
+    def addorders(self):
+        newOrder = tk.Frame(self.Container)
+        newOrder.place(x=0, y=0, height=450, width=1085)
+        newOrder.configure(relief="groove")
+        newOrder.configure(background="#c0c0c0")
+        Label1 = Label(newOrder)
+        Label1.place(x=10, y =0)
+        Label1.configure (
+            background="#c0c0c0",
+            borderwidth="0",
+            compound='left',
+            disabledforeground="#a3a3a3",
+            foreground="#3f3f3f",
+            font="-family {Segoe UI} -size 15 -weight bold",
+            text='''Add new Products''')
+        addOrderContainer = Frame(newOrder,height= 600, width = 1050, bg= "#f7f7f7")
+        addOrderContainer.place(x = 10, y = 50, )
+        clientName_l=Label(addOrderContainer,text="Client Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        clientName_l.place(x=10,y=20)
+        #userbox = Entry(loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6")
+        clientName_e=Entry(addOrderContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=2)
+        clientName_e.place(x=10,y=60)
+
+        clientAddress_l=Label(addOrderContainer,text="Client Address",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
+        clientAddress_l.place(x=10,y=100)
+        clientAddress_e = Entry(addOrderContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=2)
+        clientAddress_e.place(x=10, y=140)
+
+        phoneNumber_l = Label(addOrderContainer,  text="Client Phone number ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        phoneNumber_l.place(x=10, y=180)
+        phoneNumber_e = Entry(addOrderContainer, width=30 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        phoneNumber_e.place(x=10, y=220)
+
+        productName = Label(addOrderContainer,  text="Choose Product ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        productName.place(x=10, y=260)
+        ### This should be a drop down menu
+        productName_e = Entry(addOrderContainer, width=30 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        productName_e.place(x=10, y=300)
+
+        quantity_label = Label(addOrderContainer,  text="Qty ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        quantity_label.place(x=300, y=260)
+        ### Quantity of the order
+        quantity_e = Entry(addOrderContainer, width=5 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#f7f7f7" ,border=2)
+        quantity_e.place(x=300, y=300)
+        rate_label = Label(addOrderContainer,  text="Rate", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        rate_label.place(x=380, y=260)
+        ### This would be gotten from the database
+        rate_e = Entry(addOrderContainer, width=10 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
+        rate_e.place(x=380, y=300)
+
+        amount_label = Label(addOrderContainer,  text="Amount", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        amount_label.place(x=500, y=260)
+        ### This would be gotten from the database
+        amount_e = Entry(addOrderContainer, width=15 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
+        amount_e.place(x=500, y=300)
+    
+        def cancel():
+            newOrder.destroy()
+        def confirm():
+            #getting required value from entries
+            clientName = clientName_e.get()
+            clientAddress = clientAddress_e.get()
+            phoneNumber = phoneNumber_e.get()
+            productName = productName_e.get()
+            quantity = quantity_e.get()
+            ## This amount will be gotten from entry box
+            amount = amount_e.get()
+
+
+            ## validating Entry
+            if(clientName != "" and quantity != "" and clientAddress != "" and phoneNumber != "" and productName != "" ):
+                try:
+                    quantity = int(quantity)
+                except:
+                    messagebox.showinfo("Entry Error", "Please Enter Quantity wiht a valid number")
+                else:
+                    ## To check if user never use zero 
+                    if(quantity > 0):
+                        if messagebox.askyesno("Confirm Order", message="Are you sure to complete this order"):                            ##To do 
+                            #TODO
+                            ## Adding the order to the database
+                            ##Removing the screen after adding into database
+                            newOrder.destroy()
+                    else:
+                        messagebox.showinfo("Error", "Quantity cannot be zero")
+
+                
+            else:
+                messagebox.showinfo("Error", "Please Fill all the entries.")
+                
+        
+           
+        clearButton = Button(addOrderContainer,background="RED", width = 15 ,height=2,text="Cancel",font="-family {Segoe UI} -size 10 -weight bold" , command=cancel)
+        clearButton.place(x = 750 , y =350 )
+        saveButton = Button(addOrderContainer,background="GREEN", width = 15 ,height=2,text="Confirm",font="-family {Segoe UI} -size 10 -weight bold" ,command=confirm )
+        saveButton.place(x = 900 , y = 350)
+        
+        
+
+
+
+
         pass
     
         
