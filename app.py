@@ -1,9 +1,19 @@
+from ast import Pass
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import *
 from tkinter import ttk
 import datetime
-
+import os
+import shutil
+from turtle import width
+import numpy as np
+import pandas as pd
+import calendar
+#from datetime import datetime
+from fpdf import FPDF
+import matplotlib.pyplot as plt
+from matplotlib import rcParams
 
 class Application():
     
@@ -37,6 +47,7 @@ class Application():
         
         self.passbox = tk.Entry(self.loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6", show="x")
         self.passbox.place(x=55,y=180)
+        self.passbox.bind('<Return>',self.validateLogin)
 
         self.quit = tk.Button(self.loginframe,text="Quit",width=12,height=2,bg="#F0FEF6",command=self.quit)
         self.quit.place(x=55,y=230)
@@ -50,7 +61,7 @@ class Application():
 
         self.loginframe.place(x = 395,y= 219)
     
-    def validateLogin(self):
+    def validateLogin(self,event):
         self.password = self.passbox.get()
         self.username = self.userbox.get()
 
@@ -214,18 +225,18 @@ class Application():
             text='''20'''
         )
 
-        categorycount = tk.Frame(self.Container)
-        categorycount.place(relx=0.276, rely=0.071, relheight=0.178, relwidth=0.226)
-        categorycount.configure(
+        totalTransaction = tk.Frame(self.Container)
+        totalTransaction.place(relx=0.276, rely=0.071, relheight=0.178, relwidth=0.226)
+        totalTransaction.configure(
             relief="groove",
             background="#008040",
             highlightbackground="#d9d9d9",
             highlightcolor="black"
         )
 
-        categoryCountLabel = tk.Label(categorycount)
-        categoryCountLabel.place(relx=0.041, rely=0.48, height=41, width=124)
-        categoryCountLabel.configure(
+        totalTransactionLabel = tk.Label(totalTransaction)
+        totalTransactionLabel.place(relx=0.041, rely=0.48, height=41, width=124)
+        totalTransactionLabel.configure(
             activebackground="#f9f9f9",
             activeforeground="black",
             anchor='w',
@@ -238,12 +249,12 @@ class Application():
             foreground="#ffffff",
             highlightbackground="#d9d9d9",
             highlightcolor="black",
-            text='''Category'''
+            text='''Transactions'''
         )
 
-        categoryCountl = tk.Label(categorycount)
-        categoryCountl.place(relx=0.041, rely=0.16, height=41, width=124)
-        categoryCountl.configure(
+        totalTransactionl = tk.Label(totalTransaction)
+        totalTransactionl.place(relx=0.041, rely=0.16, height=41, width=124)
+        totalTransactionl.configure(
             activebackground="#f9f9f9",
             activeforeground="black",
             anchor='w',
@@ -257,16 +268,16 @@ class Application():
             text='''14'''
         )
 
-        categorycount_1 = tk.Frame(self.Container)
-        categorycount_1.place(relx=0.553, rely=0.071, relheight=0.178, relwidth=0.226)
-        categorycount_1.configure(
+        totalTransaction_1 = tk.Frame(self.Container)
+        totalTransaction_1.place(relx=0.553, rely=0.071, relheight=0.178, relwidth=0.226)
+        totalTransaction_1.configure(
             relief="groove",
             background="#008040",
             highlightbackground="#d9d9d9",
             highlightcolor="black",
         )
 
-        paidCountLabel = tk.Label(categorycount_1)
+        paidCountLabel = tk.Label(totalTransaction_1)
         paidCountLabel.place(relx=0.041, rely=0.48, height=41, width=124)
         paidCountLabel.configure(
             activebackground="#f9f9f9",
@@ -283,7 +294,7 @@ class Application():
             text='''Paid Orders'''
         )
 
-        paidCount = tk.Label(categorycount_1)
+        paidCount = tk.Label(totalTransaction_1)
         paidCount.place(relx=0.041, rely=0.16, height=41, width=124)
         paidCount.configure(
             activebackground="#f9f9f9",
@@ -302,29 +313,144 @@ class Application():
 
     def product(self):
 
-        productContainer = tk.Frame(self.Container)
-        productContainer.place(x=0, y=0, height=703, width=1085)
-        productContainer.configure(relief="groove")
-        productContainer.configure(background="#c0c0c0")       
+        self.productContainer = tk.Frame(self.Container)
+        self.productContainer.place(x=0, y=0, height=703, width=1085)
+        self.productContainer.configure(relief="groove")
+        self.productContainer.configure(background="#c0c0c0")       
         
-        addButton = Button(productContainer,background="#458afc", width = 15 ,height=2,text="Add Product",font="-family {Segoe UI} -size 10 -weight bold", command=self.addProducts )
+        addButton = Button(self.productContainer,background="#458afc", width = 15 ,height=2,text="Add Product",font="-family {Segoe UI} -size 10 -weight bold", command=self.addUpdateProducts )
         addButton.place(x = 10 , y = 10)
 
-        productList = Frame(productContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        productList = Frame(self.productContainer,height= 500, width = 1050, bg= "#f7f7f7")
         productList.place(x = 10, y = 60, )
         searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
-        searchLabel.place(x=730, y = 50)
+        searchLabel.place(x=730, y = 30)
         searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
-        searchBox.place(x=800,y=50)
-
-        productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        productName.place(x=20, y=100)
-
-        actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        actionName.place(x=700, y=100)
+        searchBox.place(x=800,y=30)
+        headingFrame = Frame(productList, background="#ffffff")
+        headingFrame.place(x= 10,y= 70)
+        headings = ["S/N", "Product Name","Supplier" , "Quantity","Cost Price","Selling Price"]
+        
+        for i in range(6):
+            heading = Button(headingFrame,background="#c0c0c0", width = 16 ,height=1,text=headings[i],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' )
+            heading.grid(column=i , row = 0)
+        
         TSeparator1 = ttk.Separator(productList, orient='horizontal')
-        TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
-    def addProducts(self):
+        TSeparator1.place(x= 0, y = 100 ,width= 1050, height=2)
+        demoproducts  = [
+            ["1","Product a","Supplier1","10","13","15"],
+            ["2","Product 2","Supplier1","10","13","15"],
+            ["3","Product 3","Supplier1","10","13","15"],
+            ["4","Product 4","Supplier1","10","13","15"],
+            ["5","Product 5","Supplier1","10","13","15"],
+            ["6","Product 6","Supplier1","10","13","15"],
+            ["7","Product 7","Supplier1","10","13","15"],
+            ["8","Product 8","Supplier1","10","13","15"],
+            ["9","Product 9","Supplier1","10","13","15"],
+            ["10","Product a","Supplier1","10","13","15"],
+            ["11","Product a","Supplier1","10","13","15"],
+
+            ["12","Product a","Supplier1","10","13","15"],
+            ["13","Product a","Supplier1","10","13","15"],
+            ]
+        global y
+        y = 5
+        
+        global endingValue , startingValue, currentPage
+        global previousButtonState ,nextButtonState
+        startingValue = int(0)
+        currentPage = int(1)
+        endingValue = int(7) if len(demoproducts) > 7 else len(demoproducts)
+        previousButtonState = 'disabled'
+        nextButtonState = 'active'
+        #startingValue = int(0)
+        #endingValue = int(7)
+        def showOrders():
+            productDropDown = Frame(productList,width=1050,background="#f7f7f7", height= 400)
+            productDropDown.place(x =0 , y = 100)
+            global endingValue, startingValue, currentPage
+            global previousButtonState ,nextButtonState
+            
+            
+            global y
+
+            def deleteProduct(name):
+                ## Delete product from database
+                pass
+            def updateProduct(name):
+                self.addUpdateProducts(state="Update",item =[name,"20","10","5","Test Supplier"])
+                pass
+            
+            #for r in range(startingValue, endingValue):
+
+            for r in range(startingValue, endingValue):
+                
+                itemContainer = Frame(productDropDown, width=830, height= 60,)
+                itemContainer.place(x=10,y =y)
+                itemContainer.configure(relief="groove")
+                backgroundColor = "#F2F2F2" if r % 2==0 else "White"
+                
+                for c in range(6):
+                    tableEntry = Button(itemContainer,background=backgroundColor, width = 16 ,height=2,text=demoproducts[r][c],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' ,foreground="Black")
+                    tableEntry.grid(column=c ,row= 0 )
+                edit = tk.Button(itemContainer,text="Edit",width=10,height=2,bg="Yellow",command=lambda: updateProduct(name = demoproducts[r][1]))
+                edit.grid(column=6, row = 0,padx=10)
+
+                delete = tk.Button(itemContainer,text="Delete",width=10,height=2,bg="Red")
+                delete.grid(column=7, row = 0,padx= 20)
+                
+                y += 50
+                
+            def previousButton():
+                global  startingValue, endingValue , y, currentPage
+                endingValue =  startingValue 
+                startingValue -= 7 
+                currentPage -=1
+                y = 5
+                productDropDown.pack_forget()
+                showOrders()
+            def nextButton():
+                global  startingValue, endingValue ,y, difference, currentPage
+                difference = len(demoproducts) - endingValue
+                if(difference >= 7):
+                    startingValue += 7
+                    endingValue +=  7
+                else:
+                    startingValue  = endingValue  
+                    endingValue += difference
+                y = 5
+                currentPage +=1
+                productDropDown.pack_forget()
+                showOrders()
+                            
+            if startingValue == 0:
+                previousButtonState = 'disabled'
+            else:
+                previousButtonState = 'active'
+            if endingValue >= len(demoproducts):
+                nextButtonState = 'disabled'
+            else:
+                nextButtonState = 'active'
+            previousButton = Button(productList,bg = "#f7f7f7", state=previousButtonState , text="Previous",font=('-family {Segoe UI} -size 12 -weight bold '), command=previousButton)
+            previousButton.place(x =850 , y = 460 )
+            currentCount = Button(productList,bg = "#f7f7f7",state='disabled', width=3,border=0, text=str(currentPage),font=('-family {Segoe UI} -size 12 -weight bold '))
+            currentCount.place(x =940 , y = 465 )
+            nextButton = Button(productList,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
+            nextButton.place(x =990 , y = 460 )
+        showOrders()
+        
+        
+    def addUpdateProducts(self,state ="new",item = ["","","","",""]):
+        self.productContainer.destroy()
+        topHeaderText = "Add new Products" if state == "new" else "Update exiting Product"
+
+        productName = StringVar(value=item[0]) 
+        productQuantity = StringVar(value=item[1])
+        productCp = StringVar(value=item[2])
+        productSp = StringVar(value=item[3])
+        supplier = StringVar(value=item[4])
+        confirmText = "Add Product" if state == "new" else "Update Product"
+        textVariable = "Enter" if state =="new" else "Change"
         newProduct = tk.Frame(self.Container)
         newProduct.place(x=0, y=0, height=450, width=1085)
         newProduct.configure(relief="groove")
@@ -339,41 +465,50 @@ class Application():
         Label1.configure(disabledforeground="#a3a3a3")
         Label1.configure(font="-family {Segoe UI} -size 15 -weight bold")
         Label1.configure(foreground="#3f3f3f")
-        Label1.configure(text='''Add new Products''')
+        Label1.configure(text= topHeaderText)
         additemContainer = Frame(newProduct,height= 600, width = 1050, bg= "#f7f7f7")
         additemContainer.place(x = 10, y = 50, )
-        name_l=Label(additemContainer,text="Enter Product Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        name_l=Label(additemContainer,text=textVariable +" Product Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
         name_l.place(x=10,y=20)
-        #userbox = Entry(loginframe,width=35, font=('arial 18 bold'),bg="#F0FEF6")
-        name_e=Entry(additemContainer,width=50,font=('arial 12 bold') ,background="#f7f7f7" ,border=2)
+        
+        name_e=Entry(additemContainer,width=50, textvariable = productName,font=('-family {Segoe UI} -size 12') ,background="#f7f7f7" ,border=2)
         name_e.place(x=10,y=60)
+        supplier_l=Label(additemContainer,text=textVariable +" Supplier Name",font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        supplier_l.place(x=500,y=20)
+        
+        supplier_e=Entry(additemContainer,width=50, textvariable = supplier,font=('-family {Segoe UI} -size 12') ,background="#f7f7f7" ,border=2)
+        supplier_e.place(x=500,y=60)
 
-        quantity_l=Label(additemContainer,text="Enter Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
+        quantity_l=Label(additemContainer,text=textVariable +" Quantity",font=('-family {Segoe UI} -size 12  ') ,background="#f7f7f7")
         quantity_l.place(x=10,y=100)
-        quantity_e = Entry(additemContainer, width=50, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=2)
+        quantity_e = Entry(additemContainer, width=50, textvariable=productQuantity, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7", border=2)
         quantity_e.place(x=10, y=140)
 
-        costPrice_l = Label(additemContainer,  text="Enter Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        costPrice_l = Label(additemContainer,  text= textVariable +" Cost Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
         costPrice_l.place(x=10, y=180)
-        costPrice_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        costPrice_e = Entry(additemContainer, width=50 ,textvariable=productCp, font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
         costPrice_e.place(x=10, y=220)
 
-        sellingPrice_l = Label(additemContainer,  text="Enter selling Price ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        sellingPrice_l = Label(additemContainer,   text= textVariable+" selling Price", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
         sellingPrice_l.place(x=10, y=260)
-        sellingPrice_e = Entry(additemContainer, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
+        sellingPrice_e = Entry(additemContainer,textvariable=productSp, width=50 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
         sellingPrice_e.place(x=10, y=300)
 
         def cancel():
             newProduct.destroy()
+            self.product()
+            
+            
         def confirm():
             #getting value from entries
             name = name_e.get()
             quantity = quantity_e.get()
             costPrice = costPrice_e.get()
             sellingPrice = sellingPrice_e.get()
+            supplier = supplier_e.get()
 
-            ## validating login
-            if(name != "" and quantity != "" and costPrice != "" and sellingPrice != "" ):
+            ## validating Entry
+            if(name != "" and quantity != "" and costPrice != "" and sellingPrice != ""  and supplier != "" ):
                 try:
                     quantity = int(quantity)
                     costPrice = float(costPrice)
@@ -383,11 +518,13 @@ class Application():
                 else:
                     ## To check if user never use zero 
                     if(quantity > 0 and costPrice > 0  and sellingPrice > 0):
-                        if messagebox.askyesno("Confirm Field Entry", message= "Are you sure to add " + name +" to  products list" ):
+                        if messagebox.askyesno("Confirm Field Entry", message= "Are you sure to perform this operation!" ):
                             ##To do 
                             ## Adding the product to the database
                             ##Removing the screen after adding into database
+                            
                             newProduct.destroy()
+                            self.product()
                     else:
                         messagebox.showinfo("Error", "Values cannot be zero")
 
@@ -400,33 +537,143 @@ class Application():
             
         cancelButton = Button(additemContainer,background="RED", width = 15 ,height=2,text="Cancel",font="-family {Segoe UI} -size 10 -weight bold" , command=cancel )
         cancelButton.place(x = 750 , y =350 )
-        saveButton = Button(additemContainer,background="GREEN", width = 15 ,height=2,text="Add product",font="-family {Segoe UI} -size 10 -weight bold" , command=confirm )
+        saveButton = Button(additemContainer,background="GREEN", width = 15 ,height=2,text=confirmText,font="-family {Segoe UI} -size 10 -weight bold" , command=confirm )
         saveButton.place(x = 900 , y = 350)
 
     def order(self):
-        orderContainer = tk.Frame(self.Container)
-        orderContainer.place(x=0, y=0, height=703, width=1085)
-        orderContainer.configure(relief="groove")
-        orderContainer.configure(background="#c0c0c0")       
+        self.orderContainer = tk.Frame(self.Container)
+        self.orderContainer.place(x=0, y=0, height=703, width=1085)
+        self.orderContainer.configure(relief="groove")
+        self.orderContainer.configure(background="#c0c0c0")       
         
-        addButton = Button(orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
+        addButton = Button(self.orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
         addButton.place(x = 10 , y = 10)
 
-        productList = Frame(orderContainer,height= 500, width = 1050, bg= "#f7f7f7")
+        productList = Frame(self.orderContainer,height= 500, width = 1050, bg= "#f7f7f7")
         productList.place(x = 10, y = 60, )
         searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
-        searchLabel.place(x=730, y = 50)
+        searchLabel.place(x=730, y = 30)
         searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
-        searchBox.place(x=800,y=50)
+        searchBox.place(x=800,y=30)
+        headingFrame = Frame(productList, background="#ffffff")
+        headingFrame.place(x= 0,y= 70)
+        headings = ["Bill no", "Client Name" , "Phone Number","Date Time","Product Name","Total Product","Total Amount" ]
+        
+        for i in range(7):
+            #element = StringVar(value =headings[i])
+            heading = Button(headingFrame,background="#c0c0c0", width = 17 ,height=1,text=headings[i],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' )
 
-        productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        productName.place(x=20, y=100)
-
-        actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        actionName.place(x=700, y=100)
+           # heading= Entry(headingFrame ,width=16, fg='Black',border= 2,state='disabled',justify= 'center', textvariable=element, font="-family {Segoe UI} -size 12 -weight bold ",foreground ="Black",background="#f7f7f7")
+            heading.grid(column=i , row = 0)
         TSeparator1 = ttk.Separator(productList, orient='horizontal')
-        TSeparator1.place(x= 0, y = 130 ,width= 1050, height=2)
+        TSeparator1.place(x= 0, y = 95 ,width= 1050, height=5)
+        demosales = [
+            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
+            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
+            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
+            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
+            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
+            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            
+        ]
+        global endingValue , startingValue, currentPage
+        global previousButtonState ,nextButtonState
+        global y
+        y = 5
+        startingValue = int(0)
+        currentPage = int(1)
+        endingValue = int(7) if len(demosales) > 7 else len(demosales)
+        previousButtonState = 'disabled'
+        nextButtonState = 'active'
+        #startingValue = int(0)
+        #endingValue = int(7)
+        def showSales():
+            ordersDropDown = Frame(productList,width=1050,background="#f7f7f7", height= 400)
+            ordersDropDown.place(x =0 , y = 100)
+            global endingValue, startingValue, currentPage
+            global previousButtonState ,nextButtonState
+            
+            
+            global y
+            
+            for r in range(startingValue, endingValue):                
+                itemContainer = Frame(ordersDropDown, width=1050, height= 10)
+                itemContainer.place(x=0,y =y)
+                itemContainer.configure(relief="groove")
+                backgroundColor = "#F2F2F2" if r % 2==0 else "White"
+                itemContainer.configure(background= backgroundColor )
+                for c in range(7):
+                    tableEntry = Button(itemContainer,background=backgroundColor, width = 17 ,height=2,text=demosales[r][c],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' ,foreground="Black")
+                    tableEntry.grid(column=c , row = 0)  
+              
+                y += 50  
+            def previousButton():
+                global  startingValue, endingValue , y, currentPage
+                endingValue =  startingValue 
+                startingValue -= 7 
+                currentPage -=1
+                y = 5
+                ordersDropDown.pack_forget()
+                showSales()
+            def nextButton():
+                global  startingValue, endingValue ,y, difference, currentPage
+                difference = len(demosales) - endingValue
+                if(difference >= 7):
+                    startingValue += 7
+                    endingValue +=  7
+                else:
+                    startingValue  = endingValue  
+                    endingValue += difference
+                y = 5
+                currentPage +=1
+                ordersDropDown.pack_forget()
+                showSales()
+                            
+            if startingValue == 0:
+                previousButtonState = 'disabled'
+            else:
+                previousButtonState = 'active'
+            if endingValue >= len(demosales):
+                nextButtonState = 'disabled'
+            else:
+                nextButtonState = 'active'
+            previousButton = Button(productList,bg = "#f7f7f7", state=previousButtonState , text="Previous",font=('-family {Segoe UI} -size 12 -weight bold '), command=previousButton)
+            previousButton.place(x =850 , y = 460 )
+            currentCount = Button(productList,bg = "#f7f7f7",state='disabled', width=3,border=0, text=str(currentPage),font=('-family {Segoe UI} -size 12 -weight bold '))
+            currentCount.place(x =940 , y = 465 )
+            nextButton = Button(productList,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
+            nextButton.place(x =990 , y = 460 )
+        showSales()
+
+        #productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        #productName.place(x=20, y=100)
+
+        #actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
+        #actionName.place(x=700, y=100)
+        
+        
+                 
     def addorders(self):
+        dummyProduct = ["car","house","laptop","desktop","mouse"]
+        self.orderContainer.destroy()
+        global price , amount
+        price = 0
+        amount = 0
+
         newOrder = tk.Frame(self.Container)
         newOrder.place(x=0, y=0, height=450, width=1085)
         newOrder.configure(relief="groove")
@@ -459,31 +706,72 @@ class Application():
         phoneNumber_e = Entry(addOrderContainer, width=30 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
         phoneNumber_e.place(x=10, y=220)
 
-        productName = Label(addOrderContainer,  text="Choose Product ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
-        productName.place(x=10, y=260)
+        productName_l = Label(addOrderContainer,  text="Choose Product ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+        productName_l.place(x=10, y=260)
         ### This should be a drop down menu
-        productName_e = Entry(addOrderContainer, width=30 , font=('-family {Segoe UI} -size 12 '),background="#f7f7f7" ,border=2)
-        productName_e.place(x=10, y=300)
-
+        Listitem = StringVar(value = dummyProduct)
+        
+        productName = StringVar()
+       # productName.set("Choose a product")
+       
         quantity_label = Label(addOrderContainer,  text="Qty ", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
         quantity_label.place(x=300, y=260)
         ### Quantity of the order
         quantity_e = Entry(addOrderContainer, width=5 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#f7f7f7" ,border=2)
         quantity_e.place(x=300, y=300)
-        rate_label = Label(addOrderContainer,  text="Rate", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
-        rate_label.place(x=380, y=260)
-        ### This would be gotten from the database
-        rate_e = Entry(addOrderContainer, width=10 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
-        rate_e.place(x=380, y=300)
+        
+        def rateAmount():
+            global price , amount    
+            price = "" if price == 0 else price
+            amount = "" if amount ==0 else amount 
+            price = StringVar(value = price)
+            amount = StringVar(value = amount)
+            rate_e = Entry(addOrderContainer, width=10 ,textvariable=price, font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
+            rate_e.place(x=380, y=300)
 
-        amount_label = Label(addOrderContainer,  text="Amount", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
-        amount_label.place(x=500, y=260)
+            amount_label = Label(addOrderContainer,  text="Amount", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+            amount_label.place(x=500, y=260)
+            ### This would be gotten from the database
+            amount_e = Entry(addOrderContainer, width=15 , textvariable=amount,  font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
+            amount_e.place(x=500, y=300)
+            rate_label = Label(addOrderContainer,  text="Cost Per Unit", font=('-family {Segoe UI} -size 12 '),background="#f7f7f7")
+            rate_label.place(x=380, y=260)
+        productName_e = ttk.Combobox(addOrderContainer,width = 30, textvariable = productName , values=dummyProduct, font=('-family {Segoe UI} -size 10 '),background="#f7f7f7" )
+        def productSelected(event):
+            productName  = productName_e.get()
+            ##TODO QUERING THE DATABASE FOR THE PRICE  
+
+            ## using a dummy price 
+            global price 
+            global amount
+            price = len(productName)
+            
+            if productName != "" and quantity_e.get() !="":
+                amount = int(quantity_e.get()) * price
+            else:
+                amount = 0
+            rateAmount()
+
+            #amount_e.insert(END,"hello")
+            #rate_e.insert(END,"hjjs")
+
+        rateAmount()
+        productName_e.bind("<<ComboboxSelected>>", productSelected)  
+        quantity_e.bind('<Return>', productSelected)
+        productName_e.place(x=10, y=300)
+        
+        
+        
         ### This would be gotten from the database
-        amount_e = Entry(addOrderContainer, width=15 , font=('-family {Segoe UI} -size 12 -weight bold '),background="#c0c0c0" ,border=3, state="readonly")
-        amount_e.place(x=500, y=300)
-    
+        # The text will  be equals to 0 by default 
+       
+       # price = StringVar(value=price)
+       # amount = StringVar(value=amount)
+        
+        
         def cancel():
             newOrder.destroy()
+            self.order()
         def confirm():
             #getting required value from entries
             clientName = clientName_e.get()
@@ -492,7 +780,7 @@ class Application():
             productName = productName_e.get()
             quantity = quantity_e.get()
             ## This amount will be gotten from entry box
-            amount = amount_e.get()
+            #amount = amount_e.get()
 
 
             ## validating Entry
@@ -508,7 +796,9 @@ class Application():
                             #TODO
                             ## Adding the order to the database
                             ##Removing the screen after adding into database
+                            self.order()
                             newOrder.destroy()
+                            
                     else:
                         messagebox.showinfo("Error", "Quantity cannot be zero")
 
@@ -521,19 +811,145 @@ class Application():
         clearButton = Button(addOrderContainer,background="RED", width = 15 ,height=2,text="Cancel",font="-family {Segoe UI} -size 10 -weight bold" , command=cancel)
         clearButton.place(x = 750 , y =350 )
         saveButton = Button(addOrderContainer,background="GREEN", width = 15 ,height=2,text="Confirm",font="-family {Segoe UI} -size 10 -weight bold" ,command=confirm )
-        saveButton.place(x = 900 , y = 350)
-        
-        
-
-
-
-
-        pass
-    
+        saveButton.place(x = 900 , y = 350)    
         
     def report(self):
-        pass
+        self.reportContainer = tk.Frame(self.Container)
+        self.reportContainer.place(x=0, y=0, height=703, width=1085)
+        self.reportContainer.configure(relief="groove")
+        self.reportContainer.configure(background="#c0c0c0")
+        addButton = Button(self.reportContainer,background="#458afc", width = 15 ,height=2,text="Generate Bar Chat",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
+        addButton.place(x = 10 , y = 5)
 
+
+        reportPage = Frame(self.reportContainer,background="#f7f7f7", width= 1050, height=550)
+        reportPage.place(x = 10 , y = 50)
+        companyLabel = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 16 -weight bold" , text="DELIGHT SUPERMARKET" , foreground= "Black")
+        
+        companyLabel.place(x = 400, y = 10)
+        companyaAddress = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 13 -weight bold" , text="NO 27 BACKOFF STREET NEW WHALE ROAD" , foreground= "Black")
+        companyaAddress.place(x = 330, y =40)
+        companyEmail = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 13 -weight bold" , text="delightsupermarket@gmail.com" , foreground= "Black")
+        companyEmail.place(x= 390, y = 65)
+        companyPhone = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 13 -weight bold" , text="+777xxxxxxxxxx" , foreground= "Black")
+        companyPhone.place(x= 450, y = 90)
+        TSeparator1 = ttk.Separator(reportPage, orient='horizontal')
+        TSeparator1.place(x= 0, y = 120 ,width= 1050, height=2)
+        headings = ["S/N", "Customer","Type","DATE","ProductName","Total Product","Amount" ]
+        demoreport = [
+            ["1","Customer 1", "Order","2020-01-10","Car","12", "#12000"],
+            ["2","Customer 2", "Sales","2020-01-10","Mone","12", "#12000"],
+            ["3","Customer 3", "Order","2020-01-10","Cardd","12", "#12000"],
+            ["4","Customer 4", "Sales","2020-01-10","Cssd","12", "#12000"],
+            ["5","Customer 5", "Order","2020-01-10","Car","12", "#12000"],
+            ["6","Customer 6", "Order","2020-01-10","Car","12", "#12000"],
+            ["7","Customer 7", "Order","2020-01-10","Car","12", "#12000"],
+            ["8","Customer 9", "Order","2020-01-10","Car","12", "#12000"],
+            ["9","Customer 8", "Order","2020-01-10","Car","12", "#12000"],
+            ["10","Customer 1", "Order","2020-01-10","Car","12", "#12000"]
+            ]
+        headingFrame = Frame(reportPage, background="#ffffff")
+        headingFrame.place(x= 10,y= 122)
+        for c in range(7):               
+            tableEntry = Button(headingFrame,background="#c0c0c0", width = 17 ,height=1,text=headings[c],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' ,foreground="Black")
+            #tableEntry= Entry(itemContainer ,width=16, fg='Black',border= 2,state='disabled',justify= 'center', textvariable=element, font="-family {Segoe UI} -size 12 -weight bold ",foreground ="Black",background=backgroundColor)
+            tableEntry.grid(column=c , row = 0)  
+        date=datetime.datetime.now().month
+
+        global endingValue , startingValue, currentPage
+        global previousButtonState ,nextButtonState
+        global y
+        y = 5
+        startingValue = int(0)
+        currentPage = int(1)
+        endingValue = int(7) if len(demoreport) > 7 else len(demoreport)
+        previousButtonState = 'disabled'
+        nextButtonState = 'active'
+        
+        def showReport(month = calendar.month_name[date] ,type = "all" ):
+            ##TODO REPORT FROM DATABASE WILL BE FECTCHED WITH MONTH AND TYPE PARAMETER
+            ## THE DATA WILL BE USED TO SUPPLY THE UI
+            global reportDropDown                       
+            global endingValue, startingValue, currentPage
+            global previousButtonState ,nextButtonState
+            global y
+            reportDropDown = Frame(reportPage,width=1050,background="#f7f7f7", height= 400)
+            reportDropDown.place(x =10 , y = 150)     
+            for r in range(startingValue, endingValue):                
+                itemContainer = Frame(reportDropDown, width=1050, height= 10)
+                itemContainer.place(x=0,y =y)
+                itemContainer.configure(relief="groove")
+                backgroundColor = "#F2F2F2" if r % 2==0 else "White"
+                itemContainer.configure(background= backgroundColor )
+                for c in range(7):
+                    tableEntry = Button(itemContainer,background=backgroundColor, width = 17 ,height=2,text=demoreport[r][c],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' ,foreground="Black")
+                    #tableEntry= Entry(itemContainer ,width=16, fg='Black',border= 2,state='disabled',justify= 'center', textvariable=element, font="-family {Segoe UI} -size 12 -weight bold ",foreground ="Black",background=backgroundColor)
+                    tableEntry.grid(column=c , row = 0)  
+               
+                y += 50  
+            def previousButton():
+                global  startingValue, endingValue , y, currentPage
+                endingValue =  startingValue 
+                startingValue -= 7 
+                currentPage -=1
+                y = 5
+                reportDropDown.pack_forget()
+                showReport()
+            def nextButton():
+                global  startingValue, endingValue ,y, difference, currentPage
+                difference = len(demoreport) - endingValue
+                if(difference >= 7):
+                    startingValue += 7
+                    endingValue +=  7
+                else:
+                    startingValue  = endingValue  
+                    endingValue += difference
+                y = 5
+                currentPage +=1
+                reportDropDown.pack_forget()
+                showReport()
+                            
+            if startingValue == 0:
+                previousButtonState = 'disabled'
+            else:
+                previousButtonState = 'active'
+            if endingValue >= len(demoreport):
+                nextButtonState = 'disabled'
+            else:
+                nextButtonState = 'active'
+            previousButton = Button(reportPage,bg = "#f7f7f7", state=previousButtonState , text="Previous",font=('-family {Segoe UI} -size 12 -weight bold '), command=previousButton)
+            previousButton.place(x =850 , y = 510 )
+            currentCount = Button(reportPage,bg = "#f7f7f7",state='disabled', width=3,border=0, text=str(currentPage),font=('-family {Segoe UI} -size 12 -weight bold '))
+            currentCount.place(x =940 , y = 515 )
+            nextButton = Button(reportPage,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
+            nextButton.place(x =990 , y = 510 )
+        showReport()
+        
+    
+        months = ['January', 'February', 'March', 'April', 
+                'May','June', 'July', 'August', 'September', 
+                'October', 'November', 'December'] 
+        options = ["All", "Order", "Sales"]
+        choseMonth = StringVar()
+        choseOption = StringVar()
+        def changeEvent(event):
+            global reportDropDown
+            reportDropDown.destroy()
+            global y
+            y = 5                          
+            showReport(month=choseMonth.get(),type= choseOption.get())           
+        choseMonth.set(calendar.month_name[date])
+        choseOption.set("All")
+        monthLabel = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 13 " , text="Month" , foreground= "Black")
+        monthLabel.place(x= 700, y = 90)
+        monthEntry = OptionMenu(reportPage,choseMonth,*months,command= changeEvent)
+        monthEntry.place(x = 760, y = 89)
+        typeLabel = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 13 " , text="Type" , foreground= "Black")
+        typeLabel.place(x= 870, y = 90)
+        typeEntry = OptionMenu(reportPage,choseOption,*options, command= changeEvent)
+        typeEntry.place(x = 920, y = 89)
+            
+        
     def switchTool(self, toolName, func):
         self.CurrentToolLabel.config(text=toolName)
         self.currentToolbutton.config(state=tk.NORMAL)
