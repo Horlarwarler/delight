@@ -321,14 +321,10 @@ class Application():
         addButton = Button(self.productContainer,background="#458afc", width = 15 ,height=2,text="Add Product",font="-family {Segoe UI} -size 10 -weight bold", command=self.addUpdateProducts )
         addButton.place(x = 10 , y = 10)
 
-        productList = Frame(self.productContainer,height= 500, width = 1050, bg= "#f7f7f7")
-        productList.place(x = 10, y = 60, )
-        searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
-        searchLabel.place(x=730, y = 30)
-        searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
-        searchBox.place(x=800,y=30)
+        productList = Frame(self.productContainer,height= 550, width = 1050, bg= "#f7f7f7")
+        productList.place(x = 10, y = 50, )
         headingFrame = Frame(productList, background="#ffffff")
-        headingFrame.place(x= 10,y= 70)
+        headingFrame.place(x= 10,y= 55)
         headings = ["S/N", "Product Name","Supplier" , "Quantity","Cost Price","Selling Price"]
         
         for i in range(6):
@@ -336,7 +332,7 @@ class Application():
             heading.grid(column=i , row = 0)
         
         TSeparator1 = ttk.Separator(productList, orient='horizontal')
-        TSeparator1.place(x= 0, y = 100 ,width= 1050, height=2)
+        TSeparator1.place(x= 0, y = 95 ,width= 1050, height=2)
         demoproducts  = [
             ["1","Product a","Supplier1","10","13","15"],
             ["2","Product 2","Supplier1","10","13","15"],
@@ -432,11 +428,11 @@ class Application():
             else:
                 nextButtonState = 'active'
             previousButton = Button(productList,bg = "#f7f7f7", state=previousButtonState , text="Previous",font=('-family {Segoe UI} -size 12 -weight bold '), command=previousButton)
-            previousButton.place(x =850 , y = 460 )
+            previousButton.place(x =850 , y = 475 )
             currentCount = Button(productList,bg = "#f7f7f7",state='disabled', width=3,border=0, text=str(currentPage),font=('-family {Segoe UI} -size 12 -weight bold '))
-            currentCount.place(x =940 , y = 465 )
+            currentCount.place(x =940 , y = 480 )
             nextButton = Button(productList,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
-            nextButton.place(x =990 , y = 460 )
+            nextButton.place(x =990 , y = 475 )
         showOrders()
         
         
@@ -549,14 +545,10 @@ class Application():
         addButton = Button(self.orderContainer,background="#458afc", width = 15 ,height=2,text="Add New Order",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
         addButton.place(x = 10 , y = 10)
 
-        productList = Frame(self.orderContainer,height= 500, width = 1050, bg= "#f7f7f7")
-        productList.place(x = 10, y = 60, )
-        searchLabel=Label(productList,text="Search: ", font="-family {Segoe UI} -size 13 -weight bold",foreground ='#3f3f3f',background="#f7f7f7")
-        searchLabel.place(x=730, y = 30)
-        searchBox = Entry(productList,width=35,  font=('arial 13 bold'),bg="#ffffff", border=1)
-        searchBox.place(x=800,y=30)
+        productList = Frame(self.orderContainer,height= 550, width = 1050, bg= "#f7f7f7")
+        productList.place(x = 10, y = 50, )
         headingFrame = Frame(productList, background="#ffffff")
-        headingFrame.place(x= 0,y= 70)
+        headingFrame.place(x= 10,y= 55)
         headings = ["Bill no", "Client Name" , "Phone Number","Date Time","Product Name","Total Product","Total Amount" ]
         
         for i in range(7):
@@ -566,28 +558,28 @@ class Application():
            # heading= Entry(headingFrame ,width=16, fg='Black',border= 2,state='disabled',justify= 'center', textvariable=element, font="-family {Segoe UI} -size 12 -weight bold ",foreground ="Black",background="#f7f7f7")
             heading.grid(column=i , row = 0)
         TSeparator1 = ttk.Separator(productList, orient='horizontal')
-        TSeparator1.place(x= 0, y = 95 ,width= 1050, height=5)
+        TSeparator1.place(x= 10, y = 95 ,width= 1050, height=5)
         demosales = [
-            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
-            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
-            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
-            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
-            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
-            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
-            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
-            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
-            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
-            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
-            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
-            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
-            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
-            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
-            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
-            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
-            ["Bill123","Mikail Ramadan","Client Phone", "04-01-2004","Car","3","#15000"],
-            ["Bill124","Mikail Ramadan","Client Phone", "04-01-2003","Mouse","2","#4000"],
-            ["Bill125","Mikail Ramadan","Client Phone", "04-01-2002","Movie","5","#24000"],
-            ["Bill126","Mikail Ramadan","Client Phone", "04-01-2001","Car","6","#12000"],
+            ["Bill123","David John","Client Phone", "04-01-2004","Butter","3","#15000"],
+            ["Bill124","David Mike","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill125","Junie carter","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill126","Mike wood","Client Phone", "04-01-2001","Phone","6","#12000"],
+            ["Bill127","Belly herry","Client Phone", "04-01-2004","Phone","3","#15000"],
+            ["Bill128","ramon widern","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill129","Carry testla","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill130","Alberto Richard","Client Phone", "04-01-2001","Desktop","6","#12000"],
+            ["Bill131","Madden tar","Client Phone", "04-01-2004","Laptop","3","#15000"],
+            ["Bill132","Junie carty","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill133","Fish sailor","Client Phone", "04-01-2002","Movie","5","#24000"],
+            ["Bill134","akin lod","Client Phone", "04-01-2001","Lolly","6","#12000"],
+            ["Bill135","Sap shoe","Client Phone", "04-01-2004","Phone","3","#15000"],
+            ["Bill1136","Majeed ramon","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill137","hewlet pack","Client Phone", "04-01-2002","Berry","5","#24000"],
+            ["Bill138","Sam richard","Client Phone", "04-01-2001","Soda","6","#12000"],
+            ["Bill139","Typing ramo","Client Phone", "04-01-2004","Cream","3","#15000"],
+            ["Bill140","wish gurry","Client Phone", "04-01-2003","Mouse","2","#4000"],
+            ["Bill141","jeniffar mathews","Client Phone", "04-01-2002","Snacks","5","#24000"],
+            ["Bill142","typo kelly","Client Phone", "04-01-2001","Bread","6","#12000"],
             
         ]
         global endingValue , startingValue, currentPage
@@ -603,7 +595,7 @@ class Application():
         #endingValue = int(7)
         def showSales():
             ordersDropDown = Frame(productList,width=1050,background="#f7f7f7", height= 400)
-            ordersDropDown.place(x =0 , y = 100)
+            ordersDropDown.place(x =10 , y = 100)
             global endingValue, startingValue, currentPage
             global previousButtonState ,nextButtonState
             
@@ -652,11 +644,11 @@ class Application():
             else:
                 nextButtonState = 'active'
             previousButton = Button(productList,bg = "#f7f7f7", state=previousButtonState , text="Previous",font=('-family {Segoe UI} -size 12 -weight bold '), command=previousButton)
-            previousButton.place(x =850 , y = 460 )
+            previousButton.place(x =850 , y = 475 )
             currentCount = Button(productList,bg = "#f7f7f7",state='disabled', width=3,border=0, text=str(currentPage),font=('-family {Segoe UI} -size 12 -weight bold '))
-            currentCount.place(x =940 , y = 465 )
+            currentCount.place(x =940 , y = 480 )
             nextButton = Button(productList,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
-            nextButton.place(x =990 , y = 460 )
+            nextButton.place(x =990 , y = 475 )
         showSales()
 
         #productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
@@ -818,12 +810,8 @@ class Application():
         self.reportContainer.place(x=0, y=0, height=703, width=1085)
         self.reportContainer.configure(relief="groove")
         self.reportContainer.configure(background="#c0c0c0")
-        addButton = Button(self.reportContainer,background="#458afc", width = 15 ,height=2,text="Generate Bar Chat",font="-family {Segoe UI} -size 10 -weight bold", command=self.addorders )
-        addButton.place(x = 10 , y = 5)
-
-
         reportPage = Frame(self.reportContainer,background="#f7f7f7", width= 1050, height=550)
-        reportPage.place(x = 10 , y = 50)
+        reportPage.place(x = 10 , y = 20)
         companyLabel = Label(reportPage, background="#f7f7f7",font="-family {Segoe UI} -size 16 -weight bold" , text="DELIGHT SUPERMARKET" , foreground= "Black")
         
         companyLabel.place(x = 400, y = 10)
@@ -837,16 +825,16 @@ class Application():
         TSeparator1.place(x= 0, y = 120 ,width= 1050, height=2)
         headings = ["S/N", "Customer","Type","DATE","ProductName","Total Product","Amount" ]
         demoreport = [
-            ["1","Customer 1", "Order","2020-01-10","Car","12", "#12000"],
-            ["2","Customer 2", "Sales","2020-01-10","Mone","12", "#12000"],
-            ["3","Customer 3", "Order","2020-01-10","Cardd","12", "#12000"],
-            ["4","Customer 4", "Sales","2020-01-10","Cssd","12", "#12000"],
-            ["5","Customer 5", "Order","2020-01-10","Car","12", "#12000"],
-            ["6","Customer 6", "Order","2020-01-10","Car","12", "#12000"],
-            ["7","Customer 7", "Order","2020-01-10","Car","12", "#12000"],
-            ["8","Customer 9", "Order","2020-01-10","Car","12", "#12000"],
-            ["9","Customer 8", "Order","2020-01-10","Car","12", "#12000"],
-            ["10","Customer 1", "Order","2020-01-10","Car","12", "#12000"]
+            ["1","Customer 1", "Order","2020-01-09","Laptop","10", "#12000"],
+            ["2","Customer 2", "Sales","2020-01-05","Mone","12", "#12000"],
+            ["3","Customer 3", "Order","2020-01-12","Card","15", "#15000"],
+            ["4","Customer 4", "Sales","2020-01-12","Mouse","1", "#15000"],
+            ["5","Customer 5", "Order","2020-01-14","Bread","14", "#62000"],
+            ["6","Customer 6", "Order","2020-01-12","Cream","19", "#72000"],
+            ["7","Customer 7", "Order","2020-01-23","Water","20", "#17000"],
+            ["8","Customer 9", "Order","2020-01-13","Book","35", "#12700"],
+            ["9","Customer 8", "Order","2020-01-12","Fan","10", "#12500"],
+            ["10","Customer 1", "Order","2020-01-14","Net","12", "#11000"]
             ]
         headingFrame = Frame(reportPage, background="#ffffff")
         headingFrame.place(x= 10,y= 122)
@@ -923,9 +911,18 @@ class Application():
             currentCount.place(x =940 , y = 515 )
             nextButton = Button(reportPage,bg = "#f7f7f7",state=nextButtonState , text="Next",font=('-family {Segoe UI} -size 12 -weight bold '),command= nextButton)
             nextButton.place(x =990 , y = 510 )
+            ## test amount  
+            sold = "#8000"
+            purchased = "#4000"
+            amountPurchased = Button(reportPage,bg = "#f7f7f7",state='disabled', border=0, text="Purchased: " + purchased,font=('-family {Segoe UI} -size 12 -weight bold '))
+            amountPurchased.place(x =10 , y = 515 )
+           
+            amountSold = Button(reportPage,bg = "#f7f7f7",state='disabled', border=0, text="Sold: " + sold,font=('-family {Segoe UI} -size 12 -weight bold '))
+            amountSold.place(x =150 , y = 515 )
+           
+            
         showReport()
         
-    
         months = ['January', 'February', 'March', 'April', 
                 'May','June', 'July', 'August', 'September', 
                 'October', 'November', 'December'] 
