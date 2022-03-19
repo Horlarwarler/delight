@@ -19,16 +19,16 @@ class Product:
         return 'productid'
 
 class TransactionOrder:    
-    def __init__(self, billnumber, clientname, clientaddress, phonenumber, date, productname, quantity, totalamount):
+    def __init__(self, billnumber, clientname,phonenumber, date,productname,quantity,totalamount,  clientaddress,   ):
         self.billnumber  = billnumber
         self.clientname = clientname
-        self.clientaddress = clientaddress
         self.phonenumber = phonenumber
         self.date = date
         self.productname = productname
         self.quantity = quantity
         self.amount = totalamount
-    
+        self.clientaddress = clientaddress
+      
     def getAttributes(self):
         return tuple(vars(self).values())
 
@@ -145,7 +145,7 @@ class Database:
         column: list of columns to filter by
         values: value of columns to filter by
         conjunction: Logical Operators (AND, OR)
-        '''
+/        '''
 
         sqlcommand = f'''
         SELECT {", ".join(selectionColumn)} FROM {self.__tablename} WHERE {(' %s '%(conjuction)).join(['%s = ?'%(i) for i in columns])};
@@ -212,7 +212,7 @@ class Database:
 
 
 productInstance = Product('Product', 'Delight', 1, 1.0, 1.0)
-orderInstance = TransactionOrder('BILL1234', 'ClientName', 'ClientAddress', '+2345678990', '18-03-2022', 'Ford', 1, 1.0)
+orderInstance = TransactionOrder('BILL1234', 'ClientName','+2345678990','18-03-2022', 'Ford',1, 1.0,'ClientAddress')
 reportInstance = Report('customerName', 'Sales', '19-03-2022', 'ProductName', 1, 1.0)
 
 

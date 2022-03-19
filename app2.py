@@ -373,12 +373,12 @@ class Application():
             
             global y
 
-            def deleteProduct(name):
+            def deleteProduct(id):
+                PRODUCT.deleteRow(data=id)
                 ## Delete product from database
                 pass
             def updateProduct(name):
-                print(name)
-                self.addUpdateProducts(state="Update",item =[name,"20","10","5","Test Supplier"])
+                self.addUpdateProducts(state="Update",item = name)
                 pass
             
             #for r in range(startingValue, endingValue):
@@ -394,11 +394,11 @@ class Application():
                     tableEntry = Button(itemContainer,background=backgroundColor, width = 16 ,height=2,text=allproduct[r][c],font="-family {Segoe UI} -size 10 -weight bold", state='disabled', justify='center' ,foreground="Black")
                     tableEntry.grid(column=c ,row= 0 )
 
-                edit = tk.Button(itemContainer,text="Edit",width=10,height=2,bg="Yellow",command=lambda: updateProduct(name = allproduct[r][1]))
+                edit = tk.Button(itemContainer,text="Edit",width=10,height=2,bg="Yellow",command=lambda r = r : updateProduct(name = allproduct[r]))
 
                 edit.grid(column=6, row = 0,padx=10)
 
-                delete = tk.Button(itemContainer,text="Delete",width=10,height=2,bg="Red")
+                delete = tk.Button(itemContainer,text="Delete",width=10,height=2,bg="Red", command= lambda r = r: deleteProduct(id=r))
                 delete.grid(column=7, row = 0,padx= 20)
                 
                 y += 50
@@ -442,15 +442,16 @@ class Application():
         showOrders()
         
         
-    def addUpdateProducts(self,state ="new",item = ["","","","",""]):
+    def addUpdateProducts(self,state ="new",item = ["","","","","",""]):
         self.productContainer.destroy()
         topHeaderText = "Add new Products" if state == "new" else "Update exiting Product"
 
-        productName = StringVar(value=item[0]) 
-        productQuantity = StringVar(value=item[1])
-        productCp = StringVar(value=item[2])
-        productSp = StringVar(value=item[3])
-        supplier = StringVar(value=item[4])
+        productName = StringVar(value=item[1]) 
+        supplier = StringVar(value=item[2])
+        productQuantity = StringVar(value=item[3])
+        productCp = StringVar(value=item[4])
+        productSp = StringVar(value=item[5])
+        
         confirmText = "Add Product" if state == "new" else "Update Product"
         textVariable = "Enter" if state =="new" else "Change"
         newProduct = tk.Frame(self.Container)
@@ -514,34 +515,39 @@ class Application():
                 try:
                     quantity = int(quantity)
                     costPrice = float(costPrice)
-                    sellingPrice = float(costPrice)
+                    sellingPrice = float(sellingPrice)
                 except:
                     messagebox.showinfo("Entry Error", "Please Enter Quantity , Cost Price, Selling Price with valid number")
                 else:
                     ## To check if user never use zero 
                     if(quantity > 0 and costPrice > 0  and sellingPrice > 0):
+                        print(f"quantity is {quantity} cp is {costPrice} and sp {sellingPrice}")
                         if messagebox.askyesno("Confirm Field Entry", message= "Are you sure to perform this operation!" ):
                             ##To do 
                             ## Adding the product to the database
                             ##Removing the screen after adding into database
-                            newproduct = Product(
+                            product = Product(
                                 productName=name,
                                 quantity=quantity,
                                 cost=costPrice,
                                 price=sellingPrice,
                                 supplier=supplier,
                                 )
-                            
-                            PRODUCT.addRow(newproduct)
-                            
+                            if(state == "new"):
+                                PRODUCT.addRow(product)
+                            else:
+                                pass
+                               # PRODUCT.updateRow(product)
+                            messagebox.showinfo("Success", "Successfully " + confirmText +" to database")
+
                             newProduct.destroy()
                             self.product()
                     else:
-                        messagebox.showinfo("Error", "Values cannot be zero")
+                        messagebox.showinfo("Error", "Values cannot be negative or zero")
 
                 
             else:
-                messagebox.showinfo("Error", "Please Fill all the entries.")
+                messagebox.showinfo("Error", "One or More Field is empty. Please Fill all the entries.")
 
 
 
@@ -667,11 +673,7 @@ class Application():
             nextButton.place(x =990 , y = 475 )
         showSales()
 
-        #productName=Label(productList,text="product Name: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        #productName.place(x=20, y=100)
 
-        #actionName=Label(productList,text="Action: ", font="-family {Segoe UI} -size 12 -weight bold ",foreground ="#3f3f3f",background="#f7f7f7")
-        #actionName.place(x=700, y=100)
         
         
                  
@@ -801,7 +803,7 @@ class Application():
                 try:
                     quantity = int(quantity)
                 except:
-                    messagebox.showinfo("Entry Error", "Please Enter Quantity wiht a valid number")
+                    messagebox.showinfo("Entry Error", "Please Enter Quantity with a valid number")
                 else:
                     ## To check if user never use zero 
                     if(quantity > 0):
@@ -820,16 +822,18 @@ class Application():
                                 totalamount = float(amount.get())
                             )
                             ORDER.addRow(newTransactionOrder)
+                            messagebox.showinfo("Order Succesfull", "New order has been created successfully")
+
 
                             self.order()
                             newOrder.destroy()
                             
                     else:
-                        messagebox.showinfo("Error", "Quantity cannot be zero")
+                        messagebox.showinfo("Error", "Quantity value cannot negative or zero")
 
                 
             else:
-                messagebox.showinfo("Error", "Please Fill all the entries.")
+                messagebox.showinfo("Error", "One or More Field is empty. Please Fill all the entries.")
                 
         
            
