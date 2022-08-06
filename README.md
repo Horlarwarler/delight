@@ -17,3 +17,8 @@ This operations include
 This is developed using python and some libararies such as
 * TKINTER: standard GUI libary for python
 * Sqlite: Used for database
+## Screenshots
+* Login Page
+  ![Login](https://github.com/Horlarwarler/delight/blob/main/login.png)
+* Product page
+ ![Product](https://github.com/Horlarwarler/delight/blob/main/Products.png)
